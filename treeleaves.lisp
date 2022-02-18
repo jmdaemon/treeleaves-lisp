@@ -8,8 +8,8 @@
 (defvar dir "~/Documents")
 
 ; Expands the directory path, and collects all the pdf files
-(defparameter pdf_dir (concatenate 'string (uiop:native-namestring dir) "/**/*.pdf"))
-(defparameter pdf_files (directory pdf_dir))
+(defparameter pdf-dir (concatenate 'string (uiop:native-namestring dir) "/**/*.pdf"))
+(defparameter pdf-files (directory pdf-dir))
 
 ; Split on '/' characters
 (cl-utilities:split-sequence #\/ dir)
