@@ -1,5 +1,9 @@
 #!/usr/bin/sbcl --script
 
+(defpackage :treeleaves
+  (:use :cl))
+(in-package :treeleaves)
+
 ; Load QuickLisp
 (load "/usr/lib/quicklisp/setup.lisp")
 
