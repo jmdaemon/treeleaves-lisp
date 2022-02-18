@@ -1,16 +1,15 @@
 #!/usr/bin/sbcl --script
 
+; Imports
 (require "uiop")
+(require "cl-utilities")
+
+; The directory to the pdf files
 (defvar dir "~/Documents")
 
-;(defparameter *dirs* nil "All recursive directories.")
-
-;(uiop:collect-sub*directories dir
-    ;(constantly t)
-    ;(constantly t)
-    ;(lambda (it) (push it *dirs*)))
-;(print *dirs*)
-
 ; Expands the directory path, and collects all the pdf files
-(defparameter pdf_files (concatenate 'string (uiop:native-namestring dir) "/**/*.pdf"))
-(directory pdf_files)
+(defparameter pdf_dir (concatenate 'string (uiop:native-namestring dir) "/**/*.pdf"))
+(defparameter pdf_files (directory pdf_dir))
+
+; Split on '/' characters
+(cl-utilities:split-sequence #\/ dir)
