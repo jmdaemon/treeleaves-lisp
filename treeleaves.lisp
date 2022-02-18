@@ -54,20 +54,32 @@ keys."))
 (defmethod find-doc ((key-name (eql :tags)) (key-value string))
   (first (mito:select-dao 'document
                           (sxql:where (:like :tags key-value)))))
-                          ;(sxql:where (:~ :tags key-value)))))
-                          ;(sxql:where (:= :tags key-value)))))
 
-;(find-doc :tags "Books %")
+(defun make-tag (filepath)
+  (defparameter split-filepath (split-dir (uiop:native-namestring filepath)))
+  (subseq split-filepath 4)
+  ;(defparameter tags (subseq split-filepath 4))
+  ;tags
+  )
 
-;(defvar *connection*
-;(dbi:connect :sqlite3
-           ;:database-name "documents.sqlite"))
+(defun print-tags (tags) 
+  (format t "~{~a~^ ~}~%" tags))
 
-;(dbi:fetch-all
-  ;(dbi:execute
-    ;(dbi:prepare *connection* "SELECT * FROM document")))
-    ;(dbi:prepare *connection* "SELECT * FROM documents WHERE tags ~ * 'Books';")))
+(defun format-tags (tags) 
+  (format NIL "~{~a~^ ~}~%" tags))
 
-;(dbi:do-sql *connection*
-            ;"INSERT INTO documents (tags, filepath) VALUES (?, NOW())"
-            ;(list 0))
+(loop for filepath in pdf-files
+    do
+    ;(if (not filepath) (print "Done")(
+    (if filepath
+        (write-to-db (format-tags (make-tag filepath)) (uiop:native-namestring filepath))
+        ;(write-to-db (make-tag filepath) (uiop:native-namestring filepath))
+        (print "Done")))
+        ;make-tag filepath)))
+        ;((defparameter split-filepath (split-dir (uiop:native-namestring filepath)))
+         ;(defparameter tags (subseq split-filepath 4))
+         ;(format t "~{~a~^ ~}~%" tags))
+        ;))
+        ;(write-to-db (format t "~{~a~^ ~}~%" tags) (uiop:native-namestring filepath))
+
+(find-doc :tags "Books %")
