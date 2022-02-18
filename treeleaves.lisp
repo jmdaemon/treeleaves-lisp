@@ -4,13 +4,32 @@
 (load "/usr/lib/quicklisp/setup.lisp")
 
 ; Imports
-(require "uiop")
+(require "uiop") 
 (require "cl-utilities")
 (require "mito")
-;(require "cl-dbi")
+(require "unix-opts")
 
-; The directory to the pdf files
-(defvar dir "~/Documents")
+; Define Args
+(opts:define-opts
+    (:name :help
+           :description "Show this help message"
+           :short #\h
+           :long "help")
+    (:name :fp
+       :description "System directory to generate tags for"
+       :short #\d
+       :long "directory"))
+
+; Parse CLI Opts
+(multiple-value-bind (options free-args)
+                   (opts:get-opts (uiop:command-line-arguments))
+                 ;(format t "Options: ~a~&" options)
+                 ;(format t "free args: ~a~&" free-args))
+    ; The directory to the pdf files
+    (if (getf options :fp)
+        (defvar dir (format t "~a~&" free-args))
+        (defvar dir "~/Documents")
+        ))
 
 ; Expands the directory path, and collects all the pdf files
 (defparameter pdf-dir (concatenate 'string (uiop:native-namestring dir) "/**/*.pdf"))
