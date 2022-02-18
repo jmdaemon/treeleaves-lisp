@@ -7,6 +7,7 @@
 (require "uiop")
 (require "cl-utilities")
 (require "mito")
+;(require "cl-dbi")
 
 ; The directory to the pdf files
 (defvar dir "~/Documents")
@@ -52,4 +53,21 @@ keys."))
 
 (defmethod find-doc ((key-name (eql :tags)) (key-value string))
   (first (mito:select-dao 'document
-                          (sxql:where (:= :tags key-value)))))
+                          (sxql:where (:like :tags key-value)))))
+                          ;(sxql:where (:~ :tags key-value)))))
+                          ;(sxql:where (:= :tags key-value)))))
+
+;(find-doc :tags "Books %")
+
+;(defvar *connection*
+;(dbi:connect :sqlite3
+           ;:database-name "documents.sqlite"))
+
+;(dbi:fetch-all
+  ;(dbi:execute
+    ;(dbi:prepare *connection* "SELECT * FROM document")))
+    ;(dbi:prepare *connection* "SELECT * FROM documents WHERE tags ~ * 'Books';")))
+
+;(dbi:do-sql *connection*
+            ;"INSERT INTO documents (tags, filepath) VALUES (?, NOW())"
+            ;(list 0))
