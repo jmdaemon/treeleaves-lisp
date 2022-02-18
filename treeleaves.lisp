@@ -20,13 +20,15 @@
 (defun split-dir (*dir*)
     (cl-utilities:split-sequence #\/ *dir*))
 
-; Outputs the filepaths to the directories separated by whitespace
-(defun make-tags (pdf-files)
-  (loop for filepath in pdf-files
-        do
-        (defparameter split-filepath (split-dir (uiop:native-namestring filepath)))
-        (defparameter tags (subseq split-filepath 4))
-        (format t "~{~a~^ ~}~%" tags)))
+(defun make-tag (filepath)
+  (defparameter split-filepath (split-dir (uiop:native-namestring filepath)))
+  (subseq split-filepath 4))
+
+(defun print-tags (tags) 
+  (format t "~{~a~^ ~}~%" tags))
+
+(defun format-tags (tags) 
+  (format NIL "~{~a~^ ~}~%" tags))
 
 ; Connect to SQLite3 database, initializes it if it doesn't exist
 (mito:connect-toplevel :sqlite3 :database-name "documents.sqlite")
@@ -51,35 +53,17 @@ keys."))
 (defmethod find-doc ((key-name (eql :id)) (key-value integer))
   (mito:find-dao 'document key-value))
 
+; Matches like tags
 (defmethod find-doc ((key-name (eql :tags)) (key-value string))
   (first (mito:select-dao 'document
                           (sxql:where (:like :tags key-value)))))
 
-(defun make-tag (filepath)
-  (defparameter split-filepath (split-dir (uiop:native-namestring filepath)))
-  (subseq split-filepath 4)
-  ;(defparameter tags (subseq split-filepath 4))
-  ;tags
-  )
-
-(defun print-tags (tags) 
-  (format t "~{~a~^ ~}~%" tags))
-
-(defun format-tags (tags) 
-  (format NIL "~{~a~^ ~}~%" tags))
-
+; Adds all the documents with their tags and filepath
 (loop for filepath in pdf-files
     do
-    ;(if (not filepath) (print "Done")(
     (if filepath
         (write-to-db (format-tags (make-tag filepath)) (uiop:native-namestring filepath))
-        ;(write-to-db (make-tag filepath) (uiop:native-namestring filepath))
         (print "Done")))
-        ;make-tag filepath)))
-        ;((defparameter split-filepath (split-dir (uiop:native-namestring filepath)))
-         ;(defparameter tags (subseq split-filepath 4))
-         ;(format t "~{~a~^ ~}~%" tags))
-        ;))
-        ;(write-to-db (format t "~{~a~^ ~}~%" tags) (uiop:native-namestring filepath))
 
+; Make sure to add % when matching like terms
 (find-doc :tags "Books %")
