@@ -1,11 +1,9 @@
-#!/usr/bin/sbcl --script
-
 (defpackage :treeleaves
-  (:use :cl))
+  (:use :cl)
+  (:documentation "Generate directory based file tags")
+  (:export :main)
+  )
 (in-package :treeleaves)
-
-; Load QuickLisp
-(load "/usr/lib/quicklisp/setup.lisp")
 
 ; Imports
 (require "uiop") 
@@ -13,6 +11,8 @@
 (require "mito")
 (require "unix-opts")
 
+; Main application entry point
+(defun main ()
 ; Define Args
 (opts:define-opts
     (:name :help
@@ -86,7 +86,7 @@ keys."))
     do
     (if filepath
         (write-to-db (format-tags (make-tag filepath)) (uiop:native-namestring filepath))
-        (print "Done")))
+        (print "Done"))))
 
 ; Make sure to add % when matching like terms
-(find-doc :tags "Books %")
+;(find-doc :tags "Books %"))
