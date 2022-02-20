@@ -28,6 +28,10 @@
        :description "System file path for the generated database"
        :short #\o
        :long "output")
+    (:name :p
+       :description "Globbing pattern used to search for files in the directory"
+       :short #\p
+       :long "pattern")
     )
 
 (defun show-usage ()
@@ -49,8 +53,11 @@
         )
     (if (getf options :o)
         (defparameter db (format t "~a~&" free-args))
-        (defparameter db "documents.sqlite")
-        ))
+        (defparameter db "documents.sqlite"))
+    (if (getf options :p)
+        (defparameter pat (format t "~a~&" free-args))
+        (defparameter pat "/**/*.pdf"))
+    )
 
 (if (eql dir "~/Documents")
     (format t "Using default directory: ~a~%" dir))
@@ -58,8 +65,11 @@
 (if (eql db "documents.sqlite")
     (format t "Using default database name: ~a~%" db))
 
+(if (eql pat "/**/*.pdf")
+    (format t "Globbing pattern: ~a~%" pat))
+
 ; Expands the directory path, and collects all the pdf files
-(defparameter pdf-dir (concatenate 'string (uiop:native-namestring dir) "/**/*.pdf"))
+(defparameter pdf-dir (concatenate 'string (uiop:native-namestring dir) pat))
 (defparameter pdf-files (directory pdf-dir))
 
 ;Splits a directory file path on '/' characters
