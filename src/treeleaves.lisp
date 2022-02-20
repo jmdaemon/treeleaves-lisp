@@ -13,6 +13,7 @@
 
 ; Main application entry point
 (defun main ()
+
 ; Define Args
 (opts:define-opts
     (:name :help
@@ -22,7 +23,12 @@
     (:name :fp
        :description "System directory to generate tags for"
        :short #\d
-       :long "directory"))
+       :long "directory")
+    (:name :o
+       :description "System file path for the generated database"
+       :short #\o
+       :long "output")
+    )
 
 (defun show-usage ()
   (progn
@@ -38,12 +44,19 @@
     (if (getf options :help)
         (show-usage))
     (if (getf options :fp)
-        (defvar dir (format t "~a~&" free-args))
-        (defvar dir "~/Documents")
+        (defparameter dir (format t "~a~&" free-args))
+        (defparameter dir "~/Documents")
+        )
+    (if (getf options :o)
+        (defparameter db (format t "~a~&" free-args))
+        (defparameter db "documents.sqlite")
         ))
-; Ensure the directory is set
+
 (if (eql dir "~/Documents")
     (format t "Using default directory: ~a~%" dir))
+
+(if (eql db "documents.sqlite")
+    (format t "Using default database name: ~a~%" db))
 
 ; Expands the directory path, and collects all the pdf files
 (defparameter pdf-dir (concatenate 'string (uiop:native-namestring dir) "/**/*.pdf"))
@@ -64,7 +77,7 @@
   (format NIL "~{~a~^ ~}~%" tags))
 
 ; Connect to SQLite3 database, initializes it if it doesn't exist
-(mito:connect-toplevel :sqlite3 :database-name "documents.sqlite")
+(mito:connect-toplevel :sqlite3 :database-name db)
 
 ; Define a new entry
 (mito:deftable document ()
