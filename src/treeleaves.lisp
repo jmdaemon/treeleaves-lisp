@@ -24,16 +24,26 @@
        :short #\d
        :long "directory"))
 
+(defun show-usage ()
+  (progn
+    (opts:describe
+      :prefix "Generate directory based file tags"
+      :args "[keywords]")
+    (opts:exit)))
+
 ; Parse CLI Opts
 (multiple-value-bind (options free-args)
                    (opts:get-opts (uiop:command-line-arguments))
-                 ;(format t "Options: ~a~&" options)
-                 ;(format t "free args: ~a~&" free-args))
     ; The directory to the pdf files
+    (if (getf options :help)
+        (show-usage))
     (if (getf options :fp)
         (defvar dir (format t "~a~&" free-args))
         (defvar dir "~/Documents")
         ))
+; Ensure the directory is set
+(if (eql dir "~/Documents")
+    (format t "Using default directory: ~a~%" dir))
 
 ; Expands the directory path, and collects all the pdf files
 (defparameter pdf-dir (concatenate 'string (uiop:native-namestring dir) "/**/*.pdf"))
