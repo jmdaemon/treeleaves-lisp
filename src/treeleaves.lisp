@@ -11,6 +11,21 @@
 (require "mito")
 (require "unix-opts")
 
+; Functions
+; Splits a directory file path on '/' characters
+(defun split-dir (*dir*)
+    (cl-utilities:split-sequence #\/ *dir*))
+
+(defun make-tag (filepath)
+  (defparameter split-filepath (split-dir (uiop:native-namestring filepath)))
+  (subseq split-filepath 4))
+
+(defun print-tags (tags) 
+  (format t "~{~a~^ ~}~%" tags))
+
+(defun format-tags (tags) 
+  (format NIL "~{~a~^ ~}~%" tags))
+
 ; Main application entry point
 (defun main ()
 
@@ -31,8 +46,7 @@
     (:name :p
        :description "Globbing pattern used to search for files in the directory"
        :short #\p
-       :long "pattern")
-    )
+       :long "pattern"))
 
 (defun show-usage ()
   (progn
@@ -44,13 +58,12 @@
 ; Parse CLI Opts
 (multiple-value-bind (options free-args)
                    (opts:get-opts (uiop:command-line-arguments))
-    ; The directory to the pdf files
+    ; The directory to the files
     (if (getf options :help)
         (show-usage))
     (if (getf options :fp)
         (defparameter dir (format t "~a~&" free-args))
-        (defparameter dir "~/Documents")
-        )
+        (defparameter dir "~/Documents"))
     (if (getf options :o)
         (defparameter db (format t "~a~&" free-args))
         (defparameter db "documents.sqlite"))
@@ -71,20 +84,6 @@
 ; Expands the directory path, and collects all the pdf files
 (defparameter pdf-dir (concatenate 'string (uiop:native-namestring dir) pat))
 (defparameter pdf-files (directory pdf-dir))
-
-;Splits a directory file path on '/' characters
-(defun split-dir (*dir*)
-    (cl-utilities:split-sequence #\/ *dir*))
-
-(defun make-tag (filepath)
-  (defparameter split-filepath (split-dir (uiop:native-namestring filepath)))
-  (subseq split-filepath 4))
-
-(defun print-tags (tags) 
-  (format t "~{~a~^ ~}~%" tags))
-
-(defun format-tags (tags) 
-  (format NIL "~{~a~^ ~}~%" tags))
 
 ; Connect to SQLite3 database, initializes it if it doesn't exist
 (mito:connect-toplevel :sqlite3 :database-name db)
