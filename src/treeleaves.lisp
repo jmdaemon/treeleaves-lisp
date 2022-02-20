@@ -81,9 +81,9 @@
 (if (eql pat "/**/*.pdf")
     (format t "Globbing pattern: ~a~%" pat))
 
-; Expands the directory path, and collects all the pdf files
-(defparameter pdf-dir (concatenate 'string (uiop:native-namestring dir) pat))
-(defparameter pdf-files (directory pdf-dir))
+; Expands the directory path, and collects all the files
+(defparameter file-dir (concatenate 'string (uiop:native-namestring dir) pat))
+(defparameter files (directory file-dir))
 
 ; Connect to SQLite3 database, initializes it if it doesn't exist
 (mito:connect-toplevel :sqlite3 :database-name db)
@@ -114,11 +114,12 @@ keys."))
                           (sxql:where (:like :tags key-value)))))
 
 ; Adds all the documents with their tags and filepath
-(loop for filepath in pdf-files
-    do
-    (if filepath
-        (write-to-db (format-tags (make-tag filepath)) (uiop:native-namestring filepath))
-        (print "Done"))))
+(defun add-to-db (files)
+  (loop for filepath in files
+        do
+        (if filepath
+            (write-to-db (format-tags (make-tag filepath)) (uiop:native-namestring filepath))
+            (print "Done")))))
 
 ; Make sure to add % when matching like terms
 ;(find-doc :tags "Books %"))
