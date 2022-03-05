@@ -17,6 +17,7 @@
 (in-package :treeleaves.models)
 
 (require "mito")
+(require "unix-opts")
 
 ;; Database Functions
 
@@ -39,18 +40,25 @@ keys."))
 (defmethod find-doc (table (key-name (eql :id)) (key-value integer))
   (mito:find-dao table key-value))
 
+;"Matches like tags"
 (defmethod find-doc (table (key-name (eql :tags)) (key-value string))
-  "Matches like tags"
   (first (mito:select-dao table
                           (sxql:where (:like :tags key-value)))))  
 
-(defun query (db table free-args)
-  (setq kword (fmt (car free-args)))
-  (setq search-term (fmt (car (cdr free-args))))
+(defmethod find-doc (table key-name key-value)
+  (first (mito:select-dao table
+                          (sxql:where (:like :tags key-value)))))  
+
+
+(defun query (db tables free-args)
+  (print free-args)
+  (type-of free-args)
+  (defparameter kword (fmt (car free-args)))
+  (defparameter search-term (fmt (car (cdr free-args))))
 
   (connect db)
-  (ensure-tables table)
-  (print (find-doc table kword search-term))
+  (ensure-tables tables)
+  (print (find-doc (car tables) kword search-term))
   (opts:exit))
 
 ; Define the document class
