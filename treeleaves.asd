@@ -6,7 +6,10 @@
   :depends-on ("uiop" "cl-utilities" "mito" "unix-opts")
   :components ((asdf:module "src"
                 :components
-                ((:file "treeleaves"))))
+                ((:file "format")
+                 (:file "models")
+                 (:file "treeleaves")
+                 )))
   :description "Directory tag generator for files"
   :build-operation "program-op" ;; leave as is
   :build-pathname "bin/treeleaves"

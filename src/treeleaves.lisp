@@ -1,30 +1,25 @@
 (defpackage :treeleaves
   (:use :cl)
   (:documentation "Generate directory based file tags")
-  (:export :main)
-  )
+  (:import-from #:treeleaves.models
+                #:connect
+                #:ensure-tables
+                #:write-to-db
+                #:find-doc
+                #:query
+                #:document
+                #:add-to-db)
+  (:import-from #:treeleaves.format
+                #:split-dir
+                #:make-tag
+                #:print-tags
+                #:format-tags
+                #:fmt)
+  (:export :main))
 (in-package :treeleaves)
 
-; Imports
 (require "uiop") 
-(require "cl-utilities")
-(require "mito")
-(require "unix-opts")
-
-; Functions
-; Splits a directory file path on '/' characters
-(defun split-dir (*dir*)
-    (cl-utilities:split-sequence #\/ *dir*))
-
-(defun make-tag (filepath)
-  (defparameter split-filepath (split-dir (uiop:native-namestring filepath)))
-  (subseq split-filepath 4))
-
-(defun print-tags (tags) 
-  (format t "~{~a~^ ~}~%" tags))
-
-(defun format-tags (tags) 
-  (format NIL "~{~a~^ ~}~%" tags))
+(require "unix-opts") 
 
 ; Main application entry point
 (defun main ()
@@ -36,17 +31,21 @@
            :short #\h
            :long "help")
     (:name :fp
-       :description "System directory to generate tags for"
-       :short #\d
-       :long "directory")
+           :description "System directory to generate tags for"
+           :short #\d
+           :long "directory")
     (:name :o
-       :description "System file path for the generated database"
-       :short #\o
-       :long "output")
+           :description "System file path for the generated database"
+           :short #\o
+           :long "output")
     (:name :p
-       :description "Globbing pattern used to search for files in the directory"
-       :short #\p
-       :long "pattern"))
+           :description "Globbing pattern used to search for files in the directory"
+           :short #\p
+           :long "pattern" )
+    (:name :q
+           :description "Query the database for files"
+           :short #\q
+           :long "query")))
 
 (defun show-usage ()
   (progn
@@ -70,6 +69,8 @@
     (if (getf options :p)
         (defparameter pat (format t "~a~&" free-args))
         (defparameter pat "/**/*.pdf"))
+    (if (getf options :q)
+        (query free-args))
     )
 
 (if (eql dir "~/Documents")
@@ -85,41 +86,6 @@
 (defparameter file-dir (concatenate 'string (uiop:native-namestring dir) pat))
 (defparameter files (directory file-dir))
 
-; Connect to SQLite3 database, initializes it if it doesn't exist
-(mito:connect-toplevel :sqlite3 :database-name db)
-
-; Define a new entry
-(mito:deftable document ()
-  ((tags :col-type (:varchar 4096))
-   (filepath :col-type (:varchar 4096))))
-
-; Create the table
-(mito:ensure-table-exists 'document)
-
-; Create entries and write them to the database
-(defun write-to-db (tags filepath)
-  (mito:create-dao 'document :tags tags :filepath filepath))
-
-; Find documents in the data base
-(defgeneric find-doc (key-name key-value)
-  (:documentation "Retrieves a document from the data base by one of the unique
-keys."))
-
-(defmethod find-doc ((key-name (eql :id)) (key-value integer))
-  (mito:find-dao 'document key-value))
-
-; Matches like tags
-(defmethod find-doc ((key-name (eql :tags)) (key-value string))
-  (first (mito:select-dao 'document
-                          (sxql:where (:like :tags key-value)))))
-
-; Adds all the documents with their tags and filepath
-(defun add-to-db (files)
-  (loop for filepath in files
-        do
-        (if filepath
-            (write-to-db (format-tags (make-tag filepath)) (uiop:native-namestring filepath))
-            (print "Done")))))
-
-; Make sure to add % when matching like terms
-;(find-doc :tags "Books %"))
+(connect db)
+(ensure-tables (list 'document))
+(add-to-db 'document files)
