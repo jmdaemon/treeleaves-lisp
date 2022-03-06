@@ -1,9 +1,8 @@
 (require "asdf")
 (asdf:defsystem "treeleaves"
-  :version "0.1.0"
+  :version "0.2.0"
   :author "Joseph Diza <josephm.diza@gmail.com>"
   :license "AGPLv3"
-  ;:depends-on ("uiop" "cl-utilities" "mito" "unix-opts")
   :depends-on (:uiop :cl-utilities :mito :unix-opts :iterate)
   :components ((asdf:module "src"
                 :components
