@@ -25,6 +25,7 @@
 ; - Add table cli argument
 ;   - Replace hardcoded 'document calls with table arg
 ; - Add subcommand feature to find dead filepaths and remove them from the database (reindex)
+;   - Add additional feature to find and compare similar file names, and automatically update filepath name
 ; - Add option to only generate and print file tags, file path for a given file
 
 (defun main ()
