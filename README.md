@@ -1,7 +1,20 @@
 # Treeleaves
 
+> Automatically tag files on your system
+
 Treeleaves is a program designed to create file tags based on directory location
 of the file. Treeleaves is made with Common Lisp (SBCL).
+
+## Why
+
+Tagging all your files for you automatically by directory allows you to easily
+search for them using any of these tags, and also preserve the structure of your
+current file directories. Don't feel like using Treeleaves to search for your files
+anymore? No problem, just delete the related `documents.sqlite` file, and you're done.
+
+In the future Treeleaves will automatically tag new files and insert entries into your
+document database. You'll be able to even specify other heuristics to tag files by,
+and even provide automatic migrations should you move the files somewhere else on disk.
 
 ## Installation
 
