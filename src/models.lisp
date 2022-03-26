@@ -17,7 +17,6 @@
 (in-package :treeleaves.models)
 
 (require "mito")
-(require "unix-opts")
 (require "iterate")
 
 ;; Database Functions
@@ -54,8 +53,7 @@ keys."))
   (iterate (for doc in docs)
         (print (slot-value doc 'filepath))
                 )
-  (format t "~%")
-  (opts:exit))
+  (format t "~%"))
 
 ; Define the document class
 (mito:deftable document ()

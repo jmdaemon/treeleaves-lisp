@@ -8,6 +8,7 @@
                 :components
                 ((:file "format")
                  (:file "models")
+                 (:file "cli")
                  (:file "treeleaves")
                  )))
   :description "Directory tag generator for files"
