@@ -19,12 +19,13 @@
                 #:argparse
                 #:build-cli
                 #:show-usage
+                #:show-verbose
                 #:parse-opts)
   (:export :main))
 (in-package :treeleaves)
 
 (require "uiop") 
-;(require "unix-opts") 
+(require "unix-opts") 
 
 ; TODO:
 ; - Add table cli argument
@@ -40,10 +41,13 @@
 (build-cli)
 (parse-opts (uiop:command-line-arguments))
 
-; Set defaults
-(if (eql dir "~/Documents")     (format t "Using default directory: ~a~%" dir))
-(if (eql db "documents.sqlite") (format t "Using default database name: ~a~%" db))
-(if (eql pat "/**/*.pdf")       (format t "Globbing pattern: ~a~%" pat))
+; Show debug info
+(if show-verbose (progn
+        (if dir (format t "Using Directory: ~a~%" dir))
+        (if db (format t "Using Database: ~a~%" db))
+        (if pat (format t "With Globbing Pattern: ~a~%" pat))))
+
+(opts:exit)
 
 ; Expands the directory path, and collects all the files
 (defparameter file-dir (concatenate 'string (uiop:native-namestring dir) pat))

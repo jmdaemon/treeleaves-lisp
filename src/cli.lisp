@@ -8,12 +8,15 @@
   (:export :argparse
            :build-cli
            :show-usage
+           :show-verbose
            :parse-opts
            ))
 (in-package :treeleaves.cli)
 
 (require "unix-opts") 
 (require "uiop") 
+
+(defparameter show-verbose nil)
 
 (defun argparse (free-arg)
   "Parses a CLI argument"
@@ -26,6 +29,10 @@
            :description "Show this help message"
            :short #\h
            :long "help")
+    (:name :verbose
+           :description "Show verbose information"
+           :short #\v
+           :long "verbose")
     (:name :fp
            :description "System directory to generate tags for"
            :short #\d
@@ -58,6 +65,10 @@
     (opts:get-opts args)
       (if (getf options :help)
           (show-usage))
+
+      (if (getf options :verbose)
+          (setq show-verbose t)
+          (setq show-verbose nil))
 
       (if (getf options :db)
           (defparameter db (argparse free-args))
