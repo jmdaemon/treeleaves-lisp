@@ -53,7 +53,7 @@
            :short #\q
            :long "query")
     (:name :db
-           :description "Query the database for files"
+           :description "Use an existing database"
            :short #\f
            :long "database")
     ))
