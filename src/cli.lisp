@@ -6,6 +6,7 @@
                 )
   (:import-from #:treeleaves.models
                 #:querydb
+                #:initdb
                 #:document
                 )
   (:export :argparse
@@ -108,5 +109,7 @@
       (if (getf options :q)
           (progn
             (multiple-value-bind (kword search-term) (parse-query free-args))
-            (querydb db (list 'document) kword search-term)
+            (setq tables (list 'document))
+            (initdb db tables)
+            (querydb tables kword search-term)
             (opts:exit)))))

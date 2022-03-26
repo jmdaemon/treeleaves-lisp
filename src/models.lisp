@@ -10,6 +10,8 @@
            :ensure-tables
            :write-to-db
            :find-doc
+           :find-docs
+           :initdb
            :querydb
            :document
            :add-to-db
@@ -60,31 +62,34 @@ keys."))
                              (:like :filepath ,(str:concat "%" word "%")))))))
        (sxql:order-by `(,order :created-at))))
 
+(defun initdb (db tables)
+  "Initializes the database and the database tables"
+  (connect db)
+  (ensure-tables tables))
+
 (defun showdocs (docs)
   "Show all document filepaths found in docs"
   (iterate (for doc in docs)
            (print (slot-value doc 'filepath)))
   (format t "~%"))
 
-(defun query-db-all (db tables query)
+(defun query-db-all (tables query)
   "Queries the database across all tables and for all document fields"
   (defparameter docs nil)
   (iterate (for search-term in query)
            (iterate (for table in tables)
-                    (setq docs (find-docs table :query search-term))))
-  
-  (showdocs docs))
+                    (setq docs (find-docs table :query search-term))
+                    (showdocs docs))))
 
-(defun querydb (db tables kword search-term)
+(defun querydb (tables kword search-term)
   "Query the database and show matches
 
    Note that this function only queries for tag matches only "
-  (connect db)
-  (ensure-tables tables)
-  (setq docs nil)
+
+  (defparameter docs nil)
   (iterate (for table in tables)
-           (find-doc table kword search-term))
-  (showdocs docs))
+           (setq docs (find-doc table kword search-term))
+           (showdocs docs)))
 
 ; Define the document class
 (mito:deftable document ()
