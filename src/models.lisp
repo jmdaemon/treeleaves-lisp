@@ -69,34 +69,28 @@ keys."))
 
 ;(defun querydb (db tables query)
 
-(defmethod query-db-all (db tables query)
+(defun showdocs (docs)
+  (iterate (for doc in docs)
+           (print (slot-value doc 'filepath)))
+  (format t "~%"))
+
+(defun query-db-all (db tables query)
   "Queries the database across all tables and for all document fields"
-  ;(setq docs (find-docs (car tables) kword search-term))
   (defparameter docs nil)
-  ;(iterate (for (kword search-term) in query)
   (iterate (for search-term in query)
            (iterate (for table in tables)
                     (setq docs (find-docs table :query search-term))))
   
-  ; Print all filepaths for matching documents
-  (iterate (for doc in docs)
-        (print (slot-value doc 'filepath)))
-  (format t "~%")
-  )
+  (showdocs docs))
 
 (defun querydb (db tables kword search-term)
   "Query the database and show matches
 
    Note that this function only queries for tag matches only "
-  ;(defparameter kword (first query))
-  ;(defparameter search-term (second query))
-
   (connect db)
   (ensure-tables tables)
   (setq docs (find-doc (car tables) kword search-term))
-  (iterate (for doc in docs)
-        (print (slot-value doc 'filepath)))
-  (format t "~%"))
+  (showdocs docs))
 
 ; Define the document class
 (mito:deftable document ()

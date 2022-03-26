@@ -107,5 +107,6 @@
 
       (if (getf options :q)
           (progn
-            (querydb db (list 'document) (parse-query free-args))
+            (multiple-value-bind (kword search-term) (parse-query free-args))
+            (querydb db (list 'document) kword search-term)
             (opts:exit)))))
