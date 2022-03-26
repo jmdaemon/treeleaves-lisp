@@ -42,10 +42,11 @@ keys."))
 (defmethod find-doc (table key-name key-value)
   (mito:select-dao table (sxql:where (:like :tags key-value))))
 
-(defun query (db tables free-args)
+(defun query (db tables kword search-term)
+;(defun query (db tables search-for)
   "Query the database and show matches"
-  (defparameter kword (fmt (car free-args)))
-  (defparameter search-term (fmt (car (cdr free-args))))
+  ;(defparameter kword (fmt (car free-args)))
+  ;(defparameter search-term (fmt (car (cdr free-args))))
 
   (connect db)
   (ensure-tables tables)

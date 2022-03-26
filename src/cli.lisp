@@ -1,6 +1,9 @@
 (defpackage treeleaves.cli
   (:use :cl)
   (:documentation "Create the CLI & Parse CLI arguments")
+  (:import-from #:treeleaves.format
+                #:fmt
+                )
   (:import-from #:treeleaves.models
                 #:query
                 #:document
@@ -49,6 +52,10 @@
            :description "Query the database for files"
            :short #\q
            :long "query")
+    (:name :db
+           :description "Query the database for files"
+           :short #\f
+           :long "database")
     ))
 
 (defun show-usage ()
@@ -58,6 +65,17 @@
       :prefix "Generate directory based file tags"
       :args "[keywords]")
     (opts:exit)))
+
+(defun parse-query (free-args)
+  "Parses the cli args for a database query"
+  (if (eq (length free-args) 3)
+      (progn
+        (defparameter kword (fmt (second free-args)))
+        (defparameter search-term (fmt (third free-args))))
+      (progn
+        (defparameter kword (first free-args))
+        (defparameter search-term (second free-args))))
+  (list kword search-term))
 
 (defun parse-opts (args)
   "Parses our command line options"
@@ -88,5 +106,6 @@
 
       (if (getf options :q)
           (progn
-            (query db (list 'document) free-args)
+            (multiple-value-bind (kword search-term) (parse-query free-args))
+            (query db (list 'document) kword search-term)
             (opts:exit)))))
