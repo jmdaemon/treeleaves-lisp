@@ -17,6 +17,8 @@
 (in-package :treeleaves.models)
 
 (require "mito")
+(require "sxql")
+(require "str")
 (require "iterate")
 
 ;; Database Functions
@@ -42,10 +44,52 @@ keys."))
 (defmethod find-doc (table key-name key-value)
   (mito:select-dao table (sxql:where (:like :tags key-value))))
 
-(defun querydb (db tables query)
-  "Query the database and show matches"
-  (defparameter kword (first query))
-  (defparameter search-term (second query))
+(defun find-docs (&key query (order :desc))
+  "Return a list of documents.
+   If a query string is given, search on both the tags and the filepath fields.
+
+   Usage:
+   (find-docs :query \"Books\")
+   "
+  (mito:select-dao 'document
+    (when (str:non-blank-string-p query)
+      (sxql:where
+       `(:and
+         ,@(loop for word in (str:words query)
+              :collect `(:or (:like :tags ,(str:concat "%" word "%"))
+                             (:like :filepath ,(str:concat "%" word "%")))))))
+       (sxql:order-by `(,order :created-at))))
+
+; Tests
+;(defparameter db "documents.sqlite")
+;(defparameter tables (list 'document))
+;(connect db)
+;(ensure-tables tables)
+;(find-docs :query "Books")
+
+;(defun querydb (db tables query)
+
+(defmethod query-db-all (db tables query)
+  "Queries the database across all tables and for all document fields"
+  ;(setq docs (find-docs (car tables) kword search-term))
+  (defparameter docs nil)
+  ;(iterate (for (kword search-term) in query)
+  (iterate (for search-term in query)
+           (iterate (for table in tables)
+                    (setq docs (find-docs table :query search-term))))
+  
+  ; Print all filepaths for matching documents
+  (iterate (for doc in docs)
+        (print (slot-value doc 'filepath)))
+  (format t "~%")
+  )
+
+(defun querydb (db tables kword search-term)
+  "Query the database and show matches
+
+   Note that this function only queries for tag matches only "
+  ;(defparameter kword (first query))
+  ;(defparameter search-term (second query))
 
   (connect db)
   (ensure-tables tables)
