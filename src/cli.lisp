@@ -53,6 +53,10 @@
            :description "Query the database for files"
            :short #\q
            :long "query")
+    (:name :qa
+           :description "Query the database for files across all fields"
+           :short #\a
+           :long "query-all")
     (:name :db
            :description "Use an existing database"
            :short #\f
@@ -112,4 +116,12 @@
             (setq tables (list 'document))
             (initdb db tables)
             (querydb tables kword search-term)
-            (opts:exit)))))
+            (opts:exit)))
+      (if (getf options :qa)
+          (progn
+            (setq tables (list 'document))
+            (initdb db tables)
+            (querydb-all tables (parse-query free-args))
+            (opts:exit)))
+      
+      ))
