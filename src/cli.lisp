@@ -5,7 +5,7 @@
                 #:fmt
                 )
   (:import-from #:treeleaves.models
-                #:query
+                #:querydb
                 #:document
                 )
   (:export :argparse
@@ -68,6 +68,7 @@
 
 (defun parse-query (free-args)
   "Parses the cli args for a database query"
+  ; This should be modified to allow queries on multiple kwords and search-terms
   (if (eq (length free-args) 3)
       (progn
         (defparameter kword (fmt (second free-args)))
@@ -106,6 +107,5 @@
 
       (if (getf options :q)
           (progn
-            (multiple-value-bind (kword search-term) (parse-query free-args))
-            (query db (list 'document) kword search-term)
+            (querydb db (list 'document) (parse-query free-args))
             (opts:exit)))))

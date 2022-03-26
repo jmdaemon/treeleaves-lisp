@@ -10,7 +10,7 @@
            :ensure-tables
            :write-to-db
            :find-doc
-           :query
+           :querydb
            :document
            :add-to-db
            ))
@@ -42,18 +42,16 @@ keys."))
 (defmethod find-doc (table key-name key-value)
   (mito:select-dao table (sxql:where (:like :tags key-value))))
 
-(defun query (db tables kword search-term)
-;(defun query (db tables search-for)
+(defun querydb (db tables query)
   "Query the database and show matches"
-  ;(defparameter kword (fmt (car free-args)))
-  ;(defparameter search-term (fmt (car (cdr free-args))))
+  (defparameter kword (first query))
+  (defparameter search-term (second query))
 
   (connect db)
   (ensure-tables tables)
   (setq docs (find-doc (car tables) kword search-term))
   (iterate (for doc in docs)
-        (print (slot-value doc 'filepath))
-                )
+        (print (slot-value doc 'filepath)))
   (format t "~%"))
 
 ; Define the document class
