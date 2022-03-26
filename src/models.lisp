@@ -60,16 +60,8 @@ keys."))
                              (:like :filepath ,(str:concat "%" word "%")))))))
        (sxql:order-by `(,order :created-at))))
 
-; Tests
-;(defparameter db "documents.sqlite")
-;(defparameter tables (list 'document))
-;(connect db)
-;(ensure-tables tables)
-;(find-docs :query "Books")
-
-;(defun querydb (db tables query)
-
 (defun showdocs (docs)
+  "Show all document filepaths found in docs"
   (iterate (for doc in docs)
            (print (slot-value doc 'filepath)))
   (format t "~%"))
@@ -89,7 +81,9 @@ keys."))
    Note that this function only queries for tag matches only "
   (connect db)
   (ensure-tables tables)
-  (setq docs (find-doc (car tables) kword search-term))
+  (setq docs nil)
+  (iterate (for table in tables)
+           (find-doc table kword search-term))
   (showdocs docs))
 
 ; Define the document class

@@ -9,3 +9,16 @@
 (deftest test-target-1
   (testing "should (= 1 1) to be true"
     (ok (= 1 1))))
+
+; Tests
+
+; treeleaves.model
+; find-docs
+;(defparameter db "documents.sqlite")
+;(defparameter tables (list 'document))
+;(connect db)
+;(ensure-tables tables)
+;(find-docs :query "Books")
+
+; query-db
+; query-db-all
