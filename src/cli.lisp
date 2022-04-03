@@ -37,9 +37,14 @@
 ; Show verbose information
 (defparameter show-verbose nil)
 
+(defun format-args (argv) 
+  (format NIL "~{~a~^ ~}" argv))
+
 (defun argparse (free-arg)
   "Parses a CLI argument"
-  (format t "~a~&" free-arg)) 
+  ;(format t "~a~&" free-arg)) 
+  ;(car (format-args free-arg)))
+  (format-args free-arg))
 
 (defun build-cli ()
   "Builds the CLI interface"
@@ -138,8 +143,6 @@
 ;(parse-search-term ":tags Books %")
 ;(parse-search-term "document -f ./documents.sqlite -qa :tags Books %")
 
-(defun format-args (argv) 
-  (format NIL "~{~a~^ ~}" argv))
 
 (defun parse-search (free-args)
   "Retrieves the keyword and search terms for a database query"
