@@ -5,6 +5,7 @@
            :make-tag
            :print-tags
            :format-tags
+           :format-args
            :fmt
            ))
 (in-package :treeleaves.format)
@@ -29,3 +30,7 @@
 
 (defun fmt (text)
   (format nil "~A" text)) 
+
+(defun format-args (argv) 
+  "Parses a list of arguments into a string"
+  (format NIL "~{~a~^ ~}" argv))

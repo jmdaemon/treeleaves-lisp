@@ -3,13 +3,14 @@
   (:documentation "Create the CLI & Parse CLI arguments")
   (:import-from #:treeleaves.format
                 #:fmt
+                #:format-args
                 )
   (:import-from #:treeleaves.models
                 #:document
                 #:initdb
                 #:querydb
-                ) (:export :format-args
-           :build-cli
+                ) 
+  (:export :build-cli
            :show-usage
            :show-verbose
            :parse-opts
@@ -36,10 +37,6 @@
 
 ; Show verbose information
 (defparameter show-verbose nil)
-
-(defun format-args (argv) 
-  "Parses a list of arguments into a string"
-  (format NIL "~{~a~^ ~}" argv))
 
 (defun build-cli ()
   "Builds the CLI interface"
