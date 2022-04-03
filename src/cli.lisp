@@ -25,6 +25,8 @@
 (require "iterate") 
 (require "mito")
 
+; Globals
+(log:config :pretty :warn)
 (defparameter show-verbose nil)
 
 (defun argparse (free-arg)
