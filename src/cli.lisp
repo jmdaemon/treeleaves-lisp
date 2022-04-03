@@ -4,6 +4,8 @@
   (:import-from #:treeleaves.format
                 #:fmt
                 #:format-args
+                #:parse-tables
+                #:parse-search-args
                 )
   (:import-from #:treeleaves.models
                 #:document
@@ -19,12 +21,10 @@
 
 (require "unix-opts") 
 (require "log4cl") 
-(require "cl-ppcre")
 (require "cl-utilities")
 (require "uiop") 
 (require "str") 
 (require "iterate") 
-(require "mito")
 
 ; Globals
 
@@ -37,6 +37,7 @@
 
 ; Show verbose information
 (defparameter show-verbose nil)
+(defparameter tables 'document)
 
 (defun build-cli ()
   "Builds the CLI interface"
@@ -87,55 +88,6 @@
       :args "[keywords]")
     (opts:exit)))
 
-(defun find-tables (str)
-  "Finds and returns all tables found in str"
-  (ppcre:register-groups-bind (matches)
-                              ("([\\w ]*)" str :sharedp t)
-                              (remove nil matches)))
-
-;(find-tables "document -f ./documents.sqlite -q :tags Books %")
-
-(defun parse-tables (args)
-  "Returns a list of the database tables found in free-args"
-
-  ; Make sure free-args is converted to a string
-  (defparameter tables-string (str:trim-right (find-tables args)))
-  (log:info "Result from find-tables: " tables-string)
-
-  (defparameter tables-stringlist (cl-utilities:split-sequence #\Space tables-string))
-  (log:info "Result from split: " tables-stringlist)
-
-  (defparameter tables (list (find-class 'document)))
-  (log:info "Result from tables: " tables)
-  (remove nil tables))
-
-; Test 
-;(defparameter db "documents.sqlite")
-;(defparameter tbls (parse-tables "-t document books"))
-;tbls
-;(initdb db tbls)
-;(querydb tbls ":tags" "Books %")
-;(initdb "documents.sqlite" (list 'document))
-;;(querydb (list 'document) ":tags" "Books %")
-
-
-(defun parse-keyword (str)
-    (ppcre:register-groups-bind (matches)
-                                ("(:[\\w]*)" str :sharedp t)
-                                matches))
-;(parse-keyword ":tags")
-
-(defun parse-search-args (str)
-    (ppcre:register-groups-bind (*keyword* *search-term*)
-                                ("(:[\\w]*) ([\\w %]*)" str :sharedp t)
-                                (list *keyword* *search-term*)))
-
-; Test
-;(parse-keyword "document -f ./documents.sqlite -qa :tags Books %")
-;(parse-search-term ":tags Books %")
-;(parse-search-term "document -f ./documents.sqlite -qa :tags Books %")
-
-
 (defun parse-search (free-args)
   "Retrieves the keyword and search terms for a database query"
   (defparameter args (format-args (opts:argv)))
@@ -154,8 +106,6 @@
 ;(destructuring-bind (*keyword* *search-term*) (parse-search stringargs)
   ;(list :kword *keyword* :search-term *search-term*))
 ;(destructuring-bind (*keyword* *search-term*) (parse-search stringargs))
-
-(defparameter tables 'document)
 
 (defun parse-opts (args)
   "Parses our command line options"

@@ -14,9 +14,9 @@
                 #:make-tag
                 #:print-tags
                 #:format-tags
+                #:format-args
                 #:fmt)
   (:import-from #:treeleaves.cli
-                #:argparse
                 #:build-cli
                 #:show-usage
                 #:show-verbose
