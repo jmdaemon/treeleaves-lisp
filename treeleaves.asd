@@ -3,7 +3,11 @@
   :version "0.2.0"
   :author "Joseph Diza <josephm.diza@gmail.com>"
   :license "AGPLv3"
-  :depends-on (:uiop :cl-utilities :mito :unix-opts :iterate :sxql :str :cl-ppcre)
+  :depends-on (:cl-utilities :cl-ppcre
+               :unix-opts :uiop
+               :sxql :mito
+               :iterate :str
+               :log4cl)
   :components ((asdf:module "src"
                 :components
                 ((:file "format")

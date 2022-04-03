@@ -1,6 +1,5 @@
 (defpackage treeleaves.cli
-  ;(:use :cl :treeleaves.models)
-  (:use :cl :iter :treeleaves.models)
+  (:use :cl :iter)
   (:documentation "Create the CLI & Parse CLI arguments")
   (:import-from #:treeleaves.format
                 #:fmt
@@ -18,6 +17,7 @@
 (in-package :treeleaves.cli)
 
 (require "unix-opts") 
+(require "log4cl") 
 (require "cl-ppcre")
 (require "cl-utilities")
 (require "uiop") 
@@ -100,31 +100,18 @@
 
 ;(find-tables "document -f ./documents.sqlite -q :tags Books %")
 
-(defun interpret-string-as-dbtable (tables-stringlist)
-  (defparameter tables
-    (mapcar #'(lambda (tablestr)
-                (progn
-                  (defparameter tablesymb (read-from-string tablestr))
-                  (if (find-class tablesymb nil)
-                      `,tablesymb))) tables-stringlist))
-  tables
-  )
-
-
 (defun parse-tables (args)
   "Returns a list of the database tables found in free-args"
 
   ; Make sure free-args is converted to a string
   (defparameter tables-string (str:trim-right (find-tables args)))
-  (print "Result from find-tables:")
-  (print tables-string)
+  (log:info "Result from find-tables: " tables-string)
+
   (defparameter tables-stringlist (cl-utilities:split-sequence #\Space tables-string))
-  (print "Result from split")
-  (print tables-stringlist)
+  (log:info "Result from split: " tables-stringlist)
 
   (defparameter tables (list (find-class 'document)))
-  (print "Result from tables")
-  (print tables)
+  (log:info "Result from tables: " tables)
   (remove nil tables))
 
 ; Test 
@@ -166,8 +153,8 @@
 ;(parse-search "document -f ./documents.sqlite -qa :tags Books %")
 
 ; # Test destructuring
-(defparameter args (list "document" "./documents.sqlite" "-qa" ":tags" "Books %"))
-(defparameter stringargs (format-args args))
+;(defparameter args (list "document" "./documents.sqlite" "-qa" ":tags" "Books %"))
+;(defparameter stringargs (format-args args))
 ;(parse-search stringargs)
 ;(destructuring-bind (*keyword* *search-term*) (parse-search stringargs)
   ;(list :kword *keyword* :search-term *search-term*))
@@ -192,19 +179,19 @@
 
       (if (getf options :tables)
           (progn
+            (log:info "In options :tables")
             (defparameter args (opts:argv))
-            (print args)
+            (log:info "Args: " args)
 
             (defparameter argv (cdr args))
-            (print argv)
+            (log:info "Argv: " argv)
 
             (defparameter argstr (format-args argv))
-            (print argstr)
+            (log:info "Argstr: " argstr)
 
             (setq tables (list 'document))
-            (print tables) 
-            )
-          )
+            (log:info "Tables: " tables) 
+            ))
 
       (if (getf options :fp)
           (defparameter dir (argparse free-args))
@@ -227,17 +214,12 @@
              ;(list kword *keyword* search-term *search-term*)
              (setq kword *keyword*)
              (setq search-term *search-term*))
-           (print "Parsed Args")
-               ;(print parsed)
-               ;(defparameter kword (first parsed))
-               ;(defparameter search-term (second parsed))
-           (print "Keyword, Search-Term")
-           (print kword)
-           (print search-term)
+           (log:info "Keyword: " kword)
+           (log:info "Search-Term: " search-term)
            (initdb db tables)
-           (print "Initialized Tables")
+           (log:info "Initialized Tables")
            (querydb tables kword search-term)
-           (print "Search Complete")
+           (log:info "Search Complete")
            (opts:exit)))
 
       (if (getf options :qa)
