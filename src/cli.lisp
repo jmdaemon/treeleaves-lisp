@@ -144,7 +144,8 @@
   (format NIL "~{~a~^ ~}" argv))
 
 (defun parse-search (free-args)
-  (parse-search-args free-args))
+  (defparameter args (format-args (opts:argv)))
+  (parse-search-args args))
 
 ;(parse-search "document -f ./documents.sqlite -qa :tags Books %")
 
@@ -207,24 +208,26 @@
 
       (if (getf options :q)
           (progn
-           (defparameter argv (format-args (opts:argv)))
            (defparameter kword nil)
            (defparameter search-term nil)
-           (destructuring-bind (*keyword* *search-term*) (parse-search argv)
+           (destructuring-bind (*keyword* *search-term*) (parse-search free-args)
              ;(list kword *keyword* search-term *search-term*)
              (setq kword *keyword*)
              (setq search-term *search-term*))
            (log:info "Keyword: " kword)
            (log:info "Search-Term: " search-term)
+
            (initdb db tables)
            (log:info "Initialized Tables")
+
            (querydb tables kword search-term)
            (log:info "Search Complete")
+
            (opts:exit)))
 
       (if (getf options :qa)
           (progn
             (initdb db tables)
-            (querydb-all tables (parse-query free-args))
+            (querydb-all tables (parse-search free-args))
             (opts:exit)))
       ))
