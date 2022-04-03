@@ -15,21 +15,29 @@
 (require "cl-ppcre")
 
 ; Functions
-; Splits a directory file path on '/' characters
-(defun split-dir (*dir*)
-    (cl-utilities:split-sequence #\/ *dir*))
+(defun split-dir (dir)
+    "Splits a directory file path on '/' characters"
+    (cl-utilities:split-sequence #\/ dir))
 
 (defun make-tag (filepath)
+  "Returns a list of directory names
+
+   Note that this function is hardcoded to ignore the first four directory
+   names in the list
+   "
   (defparameter split-filepath (split-dir (uiop:native-namestring filepath)))
   (subseq split-filepath 4))
 
 (defun print-tags (tags) 
+  "Pretty prints a list of tags"
   (format t "~{~a~^ ~}~%" tags))
 
 (defun format-tags (tags) 
+  "Formats a list of tags to a string"
   (format NIL "~{~a~^ ~}~%" tags))
 
 (defun fmt (text)
+  "Format some text into a string"
   (format nil "~A" text)) 
 
 (defun format-args (argv) 
