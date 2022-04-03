@@ -86,15 +86,22 @@ keys."))
 
    Note that this function only queries for tag matches only "
 
-  (defparameter docs nil)
+  ;(defparameter docs nil)
   (iterate (for table in tables)
            (setq docs (find-doc table kword search-term))
            (showdocs docs)))
 
 ; Define the document class
-(mito:deftable document ()
-                 ((tags :col-type (:varchar 4096))
-                  (filepath :col-type (:varchar 4096))))
+;(mito:deftable document ()
+                 ;((tags :col-type (:varchar 4096))
+                  ;(filepath :col-type (:varchar 4096))))
+
+(defclass document ()
+  ((tags :col-type (:varchar 4096)
+         :accessor tags)
+   (filepath :col-type (:varchar 4096)
+          :accessor filepath))
+  (:metaclass mito:dao-table-class))
 
 (defun add-to-db (db files)
   "Add new document entries to the database"

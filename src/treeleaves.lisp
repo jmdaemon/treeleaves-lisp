@@ -1,5 +1,5 @@
 (defpackage :treeleaves
-  (:use :cl)
+  (:use :cl :treeleaves.models)
   (:documentation "Generate directory based file tags")
   (:import-from #:treeleaves.models
                 #:connect
