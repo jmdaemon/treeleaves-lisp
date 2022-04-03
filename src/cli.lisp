@@ -8,7 +8,7 @@
                 #:document
                 #:initdb
                 #:querydb
-                ) (:export :argparse
+                ) (:export :format-args
            :build-cli
            :show-usage
            :show-verbose
@@ -38,13 +38,8 @@
 (defparameter show-verbose nil)
 
 (defun format-args (argv) 
+  "Parses a list of arguments into a string"
   (format NIL "~{~a~^ ~}" argv))
-
-(defun argparse (free-arg)
-  "Parses a CLI argument"
-  ;(format t "~a~&" free-arg)) 
-  ;(car (format-args free-arg)))
-  (format-args free-arg))
 
 (defun build-cli ()
   "Builds the CLI interface"
@@ -177,7 +172,7 @@
           (setq show-verbose nil))
 
       (if (getf options :db)
-          (defparameter db (argparse free-args))
+          (defparameter db (format-args free-args))
           (defparameter db "documents.sqlite"))
 
       (if (getf options :tables)
@@ -197,15 +192,15 @@
             ))
 
       (if (getf options :fp)
-          (defparameter dir (argparse free-args))
+          (defparameter dir (format-args free-args))
           (defparameter dir "~/Documents"))
 
       (if (getf options :o)
-          (defparameter db (argparse free-args))
+          (defparameter db (format-args free-args))
           (defparameter db "documents.sqlite"))
 
       (if (getf options :p)
-          (defparameter pat (argparse free-args))
+          (defparameter pat (format-args free-args))
           (defparameter pat "/**/*.pdf"))
 
       (if (getf options :q)
