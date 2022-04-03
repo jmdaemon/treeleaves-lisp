@@ -80,18 +80,6 @@
       :args "[keywords]")
     (opts:exit)))
 
-(defun parse-query (free-args)
-  "Parses the cli args for a database query"
-  ; This should be modified to allow queries on multiple kwords and search-terms
-  (if (eq (length free-args) 3)
-      (progn
-        (defparameter kword (fmt (second free-args)))
-        (defparameter search-term (fmt (third free-args))))
-      (progn
-        (defparameter kword (first free-args))
-        (defparameter search-term (second free-args))))
-  (list kword search-term))
-
 (defun find-tables (str)
   "Finds and returns all tables found in str"
   (ppcre:register-groups-bind (matches)
@@ -144,6 +132,7 @@
   (format NIL "~{~a~^ ~}" argv))
 
 (defun parse-search (free-args)
+  "Retrieves the keyword and search terms for a database query"
   (defparameter args (format-args (opts:argv)))
   (parse-search-args args))
 
@@ -211,7 +200,6 @@
            (defparameter kword nil)
            (defparameter search-term nil)
            (destructuring-bind (*keyword* *search-term*) (parse-search free-args)
-             ;(list kword *keyword* search-term *search-term*)
              (setq kword *keyword*)
              (setq search-term *search-term*))
            (log:info "Keyword: " kword)
