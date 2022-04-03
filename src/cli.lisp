@@ -21,10 +21,7 @@
 
 (require "unix-opts") 
 (require "log4cl") 
-(require "cl-utilities")
 (require "uiop") 
-(require "str") 
-(require "iterate") 
 
 ; Globals
 
