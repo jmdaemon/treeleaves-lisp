@@ -26,7 +26,15 @@
 (require "mito")
 
 ; Globals
-(log:config :pretty :warn)
+
+; Sets the log level to LOG_LEVEL_CL if set
+; Otherwise defaults to no logging
+(defparameter loglevel (uiop:getenv "LOG_LEVEL_CL"))
+(if loglevel
+ (log:config :pretty loglevel)
+ (log:config :pretty :warn))
+
+; Show verbose information
 (defparameter show-verbose nil)
 
 (defun argparse (free-arg)
