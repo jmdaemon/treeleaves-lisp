@@ -111,6 +111,15 @@
   ;(list :kword *keyword* :search-term *search-term*))
 ;(destructuring-bind (*keyword* *search-term*) (parse-search stringargs))
 
+(defun string-to-table (*string*)
+  "Returns the database table corresponding to a string key"
+  (defparameter treeleaves-table nil)
+  (if (equal table-trimmed "document")
+      (setq treeleaves-table 'document)
+      (setq treeleaves-table 'document))
+  treeleaves-table
+  )
+
 (defun parse-opts (args)
   "Parses our command line options"
   (multiple-value-bind (options free-args)
@@ -135,36 +144,15 @@
             (log:info "In options :tables")
             (defparameter argstr (format-args (opts:argv)))
             (log:info "Argstr: " argstr)
-            ;(setq tables (list (intern (format-nil "~:@(~A-~A~)" (concatenate "treeleaves.models:" argstr)))))
-            ;(setq tables (list (intern (format nil "~:@(~A-~A~)" argstr))))
+
             (defparameter table-keyword (find-tables argstr))
             (log:info "Table-Keyword: " table-keyword)
 
-            ;(defparameter treeleaves-table (concatenate 'string "treeleaves.models:" table-keyword))
-            ;(defparameter treeleaves-table table-keyword)
             (defparameter table-trimmed (str:trim-right table-keyword))
             (log:info "Result from find-tables: " table-trimmed)
 
+            (defparameter treeleaves-table (string-to-table table-trimmed))
 
-            ; Interpret string as class
-            ;(defparameter table-string (concatenate 'string "treeleaves.models:" table-trimmed))
-            ;(log:info "Table-String: " table-string)
-
-            ;(defparameter treeleaves-table (list (intern (format nil "~A" (string-upcase table-string)))))
-            ;(log:info "Treeleaves Table: " treeleaves-table)
-            ;(log:info "Real Document Class: " 'document)
-
-            (defparameter treeleaves-table nil)
-            (if (equal table-trimmed "document")
-                (setq treeleaves-table 'document)
-                (setq treeleaves-table 'document))
-
-            ; Multiple tables
-            ;(defparameter tables-stringlist (cl-utilities:split-sequence #\Space tables-string))
-            ;(log:info "Result from split: " tables-stringlist)
-
-            ;(setq tables (list (intern (format nil "~A" (string-upcase tables-string)))))
-            ;(setq tables (list (intern (format nil "~A" (string-upcase treeleaves-table)))))
             (setq tables (list treeleaves-table))
             (log:info "Tables: " tables) 
             ))
