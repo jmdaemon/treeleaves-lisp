@@ -112,14 +112,37 @@
   ;(list :kword *keyword* :search-term *search-term*))
 ;(destructuring-bind (*keyword* *search-term*) (parse-search stringargs))
 
-(defun string-to-table (*string*)
+; Define the types of database tables available to be selected
+(defparameter *database-table-types* (make-hash-table :test #'equal))
+
+; Add the document class 
+;(setf (gethash "document" *database-table-types*) 'document)
+(setf (gethash "document" *database-table-types*) 'document)
+
+; Test the database lookup
+;(gethash "document" *database-table-types*)
+
+;(gethash nil *database-table-types*)
+;(gethash 'document *database-table-types*)
+;(gethash '"document" *database-table-types*)
+;(gethash 42 *database-table-types*)
+
+; (gethash '"document" *database-table-types*)
+ ;(gethash '"document" *database-table-types*)
+
+(defun string-to-table (*key*)
   "Returns the database table corresponding to a string key"
   (defparameter treeleaves-table nil)
-  (if (equal table-trimmed "document")
-      (setq treeleaves-table 'document)
-      (setq treeleaves-table 'document))
+  ; Check to see if that table type exists in our database
+  (setq treeleaves-table (gethash *key* *database-table-types*))
+  ;(if (equal table-trimmed "document")
+      ;(setq treeleaves-table 'document)
+      ;(setq treeleaves-table 'document))
   treeleaves-table
   )
+
+; Test
+;(string-to-table "document")
 
 (defun parse-opts (args)
   "Parses our command line options"
