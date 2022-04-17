@@ -28,13 +28,14 @@
 
 ; Globals
 
+; https://github.com/7max/log4cl#category
+; Log levels available:
+; 0: OFF, 1: FATAL, 2: ERROR, 3: WARN, 4: INFO, 5:DEBUG
 ; Sets the log level to LOG_LEVEL_CL if set
-; Otherwise defaults to no logging
 (defparameter loglevel (uiop:getenv "LOG_LEVEL_CL"))
- ;(log:config :pretty loglevel)
 (if loglevel
- (log:config :pretty :info)
- (log:config :pretty :warn))
+ (log:config :pretty loglevel); Set the log level
+ (log:config :pretty :error)) ; Else only show errors
 
 ; Show verbose information
 (defparameter show-verbose nil)
