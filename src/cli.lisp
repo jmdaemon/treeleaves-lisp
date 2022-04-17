@@ -9,6 +9,7 @@
                 #:parse-search-args
                 )
   (:import-from #:treeleaves.models
+                #:*database-table-types*
                 #:document
                 #:initdb
                 #:querydb
@@ -111,15 +112,6 @@
 ;(destructuring-bind (*keyword* *search-term*) (parse-search stringargs)
   ;(list :kword *keyword* :search-term *search-term*))
 ;(destructuring-bind (*keyword* *search-term*) (parse-search stringargs))
-
-; Define the types of database tables available to be selected
-(defparameter *database-table-types* (make-hash-table :test #'equal))
-
-; Add the document class 
-(setf (gethash "document" *database-table-types*) 'document)
-
-; Test the database lookup
-;(gethash "document" *database-table-types*)
 
 (defun string-to-table (*key*)
   "Returns the database table corresponding to a string key"

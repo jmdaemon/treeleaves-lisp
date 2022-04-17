@@ -14,6 +14,7 @@
            :initdb
            :querydb
            :document
+           :*database-table-types*
            :add-to-db
            ))
 (in-package :treeleaves.models)
@@ -102,6 +103,15 @@ keys."))
    (filepath :col-type (:varchar 4096)
           :accessor filepath))
   (:metaclass mito:dao-table-class))
+
+; Define the types of database tables available to be selected
+(defparameter *database-table-types* (make-hash-table :test #'equal))
+
+; Add the document class 
+(setf (gethash "document" *database-table-types*) 'document)
+
+; Test the database lookup
+;(gethash "document" *database-table-types*)
 
 (defun add-to-db (db files)
   "Add new document entries to the database"
