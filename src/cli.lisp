@@ -4,6 +4,7 @@
   (:import-from #:treeleaves.format
                 #:fmt
                 #:format-args
+                #:find-tables
                 #:parse-tables
                 #:parse-search-args
                 )
@@ -20,16 +21,19 @@
 (in-package :treeleaves.cli)
 
 (require "unix-opts") 
+(require "cl-utilities")
 (require "log4cl") 
 (require "uiop") 
+(require "str")
 
 ; Globals
 
 ; Sets the log level to LOG_LEVEL_CL if set
 ; Otherwise defaults to no logging
 (defparameter loglevel (uiop:getenv "LOG_LEVEL_CL"))
+ ;(log:config :pretty loglevel)
 (if loglevel
- (log:config :pretty loglevel)
+ (log:config :pretty :info)
  (log:config :pretty :warn))
 
 ; Show verbose information
@@ -131,7 +135,37 @@
             (log:info "In options :tables")
             (defparameter argstr (format-args (opts:argv)))
             (log:info "Argstr: " argstr)
-            (setq tables (list 'document))
+            ;(setq tables (list (intern (format-nil "~:@(~A-~A~)" (concatenate "treeleaves.models:" argstr)))))
+            ;(setq tables (list (intern (format nil "~:@(~A-~A~)" argstr))))
+            (defparameter table-keyword (find-tables argstr))
+            (log:info "Table-Keyword: " table-keyword)
+
+            ;(defparameter treeleaves-table (concatenate 'string "treeleaves.models:" table-keyword))
+            ;(defparameter treeleaves-table table-keyword)
+            (defparameter table-trimmed (str:trim-right table-keyword))
+            (log:info "Result from find-tables: " table-trimmed)
+
+
+            ; Interpret string as class
+            ;(defparameter table-string (concatenate 'string "treeleaves.models:" table-trimmed))
+            ;(log:info "Table-String: " table-string)
+
+            ;(defparameter treeleaves-table (list (intern (format nil "~A" (string-upcase table-string)))))
+            ;(log:info "Treeleaves Table: " treeleaves-table)
+            ;(log:info "Real Document Class: " 'document)
+
+            (defparameter treeleaves-table nil)
+            (if (equal table-trimmed "document")
+                (setq treeleaves-table 'document)
+                (setq treeleaves-table 'document))
+
+            ; Multiple tables
+            ;(defparameter tables-stringlist (cl-utilities:split-sequence #\Space tables-string))
+            ;(log:info "Result from split: " tables-stringlist)
+
+            ;(setq tables (list (intern (format nil "~A" (string-upcase tables-string)))))
+            ;(setq tables (list (intern (format nil "~A" (string-upcase treeleaves-table)))))
+            (setq tables (list treeleaves-table))
             (log:info "Tables: " tables) 
             ))
 
