@@ -28,11 +28,19 @@
 (require "unix-opts") 
 
 ; TODO:
-; - Add table cli argument
-;   - Replace hardcoded 'document calls with table arg
-; - Add subcommand feature to find dead filepaths and remove them from the database (reindex)
-;   - Add additional feature to find and compare similar file names, and automatically update filepath name
-; - Add option to only generate and print file tags, file path for a given file
+; Pruning:
+; - Find dead filepaths and remove them from the database (reindex)
+; Indexing
+; - Find dead filepaths, remove them from the database, and add new files to the database
+; - Add commands to
+;   - Reindex a file
+;   - Reindex a directory
+;   - Reindex all files in a database
+;   - Reindex missing files
+; With support for 
+;   - Automigration
+; Automigration:
+;   - Find and compare similar file names, and automatically update filepath name
 
 (defun main ()
   "Main application entry point"
