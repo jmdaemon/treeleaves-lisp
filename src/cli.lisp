@@ -116,28 +116,21 @@
 (defparameter *database-table-types* (make-hash-table :test #'equal))
 
 ; Add the document class 
-;(setf (gethash "document" *database-table-types*) 'document)
 (setf (gethash "document" *database-table-types*) 'document)
 
 ; Test the database lookup
 ;(gethash "document" *database-table-types*)
-
-;(gethash nil *database-table-types*)
-;(gethash 'document *database-table-types*)
-;(gethash '"document" *database-table-types*)
-;(gethash 42 *database-table-types*)
-
-; (gethash '"document" *database-table-types*)
- ;(gethash '"document" *database-table-types*)
 
 (defun string-to-table (*key*)
   "Returns the database table corresponding to a string key"
   (defparameter treeleaves-table nil)
   ; Check to see if that table type exists in our database
   (setq treeleaves-table (gethash *key* *database-table-types*))
-  ;(if (equal table-trimmed "document")
-      ;(setq treeleaves-table 'document)
-      ;(setq treeleaves-table 'document))
+  ; If no table types were found
+  (if (equal nil treeleaves-table)
+      (progn ; Error out
+        (format t "No tables with name ~A were found.~%" *key*)
+        (opts:exit)))
   treeleaves-table
   )
 
