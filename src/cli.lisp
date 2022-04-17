@@ -4,6 +4,8 @@
   (:import-from #:treeleaves.format
                 #:fmt
                 #:format-args
+                #:format-tags
+                #:make-tag
                 #:find-tables
                 #:parse-tables
                 #:parse-search-args
@@ -26,6 +28,7 @@
 (require "log4cl") 
 (require "uiop") 
 (require "str")
+(require "iterate")
 
 ; Globals
 
@@ -83,6 +86,10 @@
     (:name :tables
            :description "Use an existing database table"
            :short #\t
+           :long "tables")
+    (:name :gen-tags
+           :description "Generate and print the corresponding tags only"
+           :short #\g
            :long "tables")
     ))
 
@@ -181,6 +188,29 @@
       (if (getf options :p)
           (defparameter pat (format-args free-args))
           (defparameter pat "/**/*.pdf"))
+
+      ; Generate and print the tags only
+      (if (getf options :gen-tags)
+          ; Collect the names of files in the directory
+          (progn
+            (defparameter file-dir (concatenate 'string (uiop:native-namestring dir) pat))
+            (defparameter files (directory file-dir))
+            (iter (for filepath in files)
+                  ;(defparameter tags (format nil "~{~a~^ ~}~%" (format-tags (make-tag filepath))))
+                  ;(defparameter tags (format-tags (make-tag filepath)))
+                  (defparameter tags (format nil "~{~a~^ ~}" (make-tag filepath)))
+                  (format t "~A~A~%" tags filepath)
+                  ;(format t "~{~a~^ ~}~A~%" (format-tags (make-tag filepath)) filepath)
+                  ;(format t "~{~a~^ ~}~A~%" (format-tags (make-tag filepath)) filepath)
+                  ;(print (format-tags (make-tag filepath)))
+                  ;(if (not (equal filepath nil))
+                  ;(print (format-tags (make-tag filepath)))
+                  ;)
+                
+                )
+            
+            )
+          )
 
       ;; Database queries
       (if (getf options :q)
