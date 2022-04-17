@@ -191,26 +191,15 @@
 
       ; Generate and print the tags only
       (if (getf options :gen-tags)
-          ; Collect the names of files in the directory
           (progn
+            ; Collect the names of files in the directory
             (defparameter file-dir (concatenate 'string (uiop:native-namestring dir) pat))
             (defparameter files (directory file-dir))
+            ; Output the generated tags
             (iter (for filepath in files)
-                  ;(defparameter tags (format nil "~{~a~^ ~}~%" (format-tags (make-tag filepath))))
-                  ;(defparameter tags (format-tags (make-tag filepath)))
                   (defparameter tags (format nil "~{~a~^ ~}" (make-tag filepath)))
                   (format t "~A~A~%" tags filepath)
-                  ;(format t "~{~a~^ ~}~A~%" (format-tags (make-tag filepath)) filepath)
-                  ;(format t "~{~a~^ ~}~A~%" (format-tags (make-tag filepath)) filepath)
-                  ;(print (format-tags (make-tag filepath)))
-                  ;(if (not (equal filepath nil))
-                  ;(print (format-tags (make-tag filepath)))
-                  ;)
-                
-                )
-            
-            )
-          )
+                )))
 
       ;; Database queries
       (if (getf options :q)
