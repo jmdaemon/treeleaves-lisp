@@ -5,12 +5,14 @@
            :make-tag
            :print-tags
            :format-tags
+           :find-tables
            :format-args
            :fmt
            ))
 (in-package :treeleaves.format)
 
 (require "uiop") 
+(require "str")
 (require "cl-utilities")
 (require "cl-ppcre")
 
@@ -47,10 +49,15 @@
 (defun find-tables (str)
   "Finds and returns all tables found in str"
   (ppcre:register-groups-bind (matches)
-                              ("([\\w ]*)" str :sharedp t)
+                              ;("([\\w ]*)" str :sharedp t)
+                              ;("(-t) ([\\w ]*)" str :sharedp t)
+                              ;("(t [\\w ]*)" str :sharedp t)
+                              ("-t ([\\w ]*)" str :sharedp t)
                               (remove nil matches)))
 
 ;(find-tables "document -f ./documents.sqlite -q :tags Books %") 
+;(find-tables "-t document -f ./documents.sqlite -q :tags Books %") 
+;(find-tables "./bin/treeleaves -t document -f ./documents.sqlite -q \":tags\" \"Books\" %") 
 
 (defun parse-tables (args)
   "Returns a list of the database tables found in free-args"
