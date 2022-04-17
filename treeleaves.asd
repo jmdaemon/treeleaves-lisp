@@ -1,6 +1,6 @@
 (require "asdf")
 (asdf:defsystem "treeleaves"
-  :version "0.2.0"
+  :version "0.3.0"
   :author "Joseph Diza <josephm.diza@gmail.com>"
   :license "AGPLv3"
   :depends-on (:cl-utilities :cl-ppcre
