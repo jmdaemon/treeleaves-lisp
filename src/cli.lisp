@@ -41,9 +41,12 @@
  (log:config :pretty loglevel); Set the log level
  (log:config :pretty :error)) ; Else only show errors
 
+; Variables
 ; Show verbose information
 (defparameter show-verbose nil)
 (defparameter tables 'document)
+(defparameter db nil)
+(defparameter dir nil)
 
 ;; TODO:
 ;; Write up a macro that generates this code
@@ -151,8 +154,8 @@
       ;; Querying the database
       ; Sets the database file path
       (if (getf options :db)
-          (defparameter db (format-args free-args))
-          (defparameter db "documents.sqlite"))
+          (setq db (format-args free-args))
+          (setq db "documents.sqlite"))
 
       ; Set the tables to lookup in the database
       (if (getf options :tables)
@@ -176,13 +179,12 @@
       ;; Generating the database
       ; Sets the root file path to discover files
       (if (getf options :fp)
-          (defparameter dir (format-args free-args))
-          (defparameter dir "~/Documents"))
+          (setq dir (format-args free-args))
+          (setq dir "~/Documents"))
 
       ; Generates the database with this file path/name
       (if (getf options :o)
-          (defparameter db (format-args free-args))
-          (defparameter db "documents.sqlite"))
+          (setq db (format-args free-args)))
 
       ; The file globbing pattern to be used to discover files
       (if (getf options :p)
