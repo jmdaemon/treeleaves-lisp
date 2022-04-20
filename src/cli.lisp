@@ -48,6 +48,7 @@
 (defparameter tables nil)
 (defparameter db nil)
 (defparameter dir nil)
+(defparameter pat nil)
 
 ;; TODO:
 ;; Write up a macro that generates this code
@@ -197,13 +198,13 @@
 
       ; Generates the database with this file path/name
       (if (getf options :o)
-          (setq odb (uiop:native-namestring (parse-database-args (format-args free-args))))
-          (setq odb db))
+          (setq db (uiop:native-namestring (parse-database-args (format-args free-args))))
+          (setq db db))
 
       ; The file globbing pattern to be used to discover files
       (if (getf options :p)
-          (defparameter pat (format-args free-args))
-          (defparameter pat "/**/*.pdf"))
+          (setq pat (format-args free-args))
+          (setq pat "/**/*.pdf"))
 
       ; Generate and print the tags only
       (if (getf options :gen-tags)
