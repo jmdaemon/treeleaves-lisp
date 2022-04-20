@@ -90,7 +90,7 @@
     (:name :gen-tags
            :description "Generate and print the corresponding tags only"
            :short #\g
-           :long "tables")
+           :long "--generate")
     ))
 
 (defun show-usage ()
