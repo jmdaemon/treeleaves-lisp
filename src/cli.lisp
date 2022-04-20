@@ -44,7 +44,7 @@
 ; Variables
 ; Show verbose information
 (defparameter show-verbose nil)
-(defparameter tables 'document)
+(defparameter tables nil)
 (defparameter db nil)
 (defparameter dir nil)
 
@@ -174,7 +174,8 @@
 
             (setq tables (list treeleaves-table))
             (log:info "Tables: " tables) 
-            ))
+            )
+          (setq tables (list 'document)))
 
       ;; Generating the database
       ; Sets the root file path to discover files
