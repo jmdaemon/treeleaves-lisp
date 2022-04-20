@@ -7,6 +7,7 @@
            :format-tags
            :find-tables
            :format-args
+           :parse-database-args
            :fmt
            ))
 (in-package :treeleaves.format)
@@ -91,3 +92,16 @@
 ; Test
 ;(parse-search-term ":tags Books %")
 ;(parse-search-term "document -f ./documents.sqlite -qa :tags Books %") 
+
+(defun parse-database-args (str)
+  "Parses a string of command line arguments into
+   a keyword and a search term"
+    (ppcre:register-groups-bind (matches)
+                                ;("-f ([\\w\./]*[sqlite])" str :sharedp t)
+                                ("-f ([\\~\\w\\./]*[sqlite])" str :sharedp t)
+                                (remove nil matches))) 
+; Test
+;(setq cwd (parse-database-args "document -f ./documents.sqlite -qa :tags Books %"))
+;(setq docs-dir (parse-database-args "document -f ~/Documents/documents.sqlite -qa :tags Books %"))
+;(setq dir-namestring (uiop:native-namestring cwd))
+;(uiop:native-namestring dir-namestring)

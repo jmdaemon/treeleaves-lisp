@@ -9,6 +9,7 @@
                 #:find-tables
                 #:parse-tables
                 #:parse-search-args
+                #:parse-database-args
                 )
   (:import-from #:treeleaves.models
                 #:*database-table-types*
@@ -154,8 +155,19 @@
       ;; Querying the database
       ; Sets the database file path
       (if (getf options :db)
-          (setq db (format-args free-args))
-          (setq db "documents.sqlite"))
+          (progn
+            (defparameter argstr (format-args (opts:argv)))
+            (log:info "Argstr: " argstr)
+            (defparameter dbname (parse-database-args argstr))
+            (log:info "Database Name: " dbname)
+            (setq db (uiop:native-namestring dbname))
+            (log:info "In options :db")
+            (log:info "Set db to " db)
+            (if (equal db nil)
+                (progn
+                  (log:info "Could not set database path")
+                  (opts:exit))))
+          (setq db (uiop:native-namestring "./documents.sqlite")))
 
       ; Set the tables to lookup in the database
       (if (getf options :tables)
@@ -173,8 +185,7 @@
             (defparameter treeleaves-table (string-to-table table-trimmed))
 
             (setq tables (list treeleaves-table))
-            (log:info "Tables: " tables) 
-            )
+            (log:info "Tables: " tables))
           (setq tables (list 'document)))
 
       ;; Generating the database
@@ -185,7 +196,8 @@
 
       ; Generates the database with this file path/name
       (if (getf options :o)
-          (setq db (format-args free-args)))
+          (setq odb (uiop:native-namestring (parse-database-args (format-args free-args))))
+          (setq odb db))
 
       ; The file globbing pattern to be used to discover files
       (if (getf options :p)
@@ -207,22 +219,33 @@
       ;; Database queries
       (if (getf options :q)
           (progn
-           (defparameter kword nil)
-           (defparameter search-term nil)
-           (destructuring-bind (*keyword* *search-term*) (parse-search free-args)
-             (setq kword *keyword*)
-             (setq search-term *search-term*))
-           (log:info "Keyword: " kword)
-           (log:info "Search-Term: " search-term)
-           (initdb db tables)
-           (log:info "Initialized Tables")
-           (querydb tables kword search-term)
-           (log:info "Search Complete")
-           (opts:exit)))
+            (log:info "Database Path: " db)
+            (log:info "Database Table: " tables)
+
+            (defparameter kword nil)
+            (defparameter search-term nil)
+            (destructuring-bind (*keyword* *search-term*) (parse-search free-args)
+              (setq kword *keyword*)
+              (setq search-term *search-term*))
+            (log:info "Keyword: " kword)
+            (log:info "Search-Term: " search-term)
+
+            (initdb db tables)
+            (log:info "Initialized Database")
+
+            (querydb tables kword search-term)
+            (log:info "Search Complete")
+            (opts:exit)))
 
       (if (getf options :qa)
           (progn
+            (log:info "Database Path: " db)
+            (log:info "Database Table: " tables)
+
             (initdb db tables)
+            (log:info "Initialized Database")
+
             (querydb-all tables (parse-search free-args))
+            (log:info "Search Complete")
             (opts:exit)))
       ))
