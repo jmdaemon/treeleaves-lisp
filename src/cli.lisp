@@ -144,6 +144,7 @@
   "Parses our command line options"
   (multiple-value-bind (options free-args)
     (opts:get-opts args)
+      ; Show help message
       (if (getf options :help)
           (show-usage))
 
@@ -153,7 +154,7 @@
           (setq show-verbose nil))
 
       ;; Querying the database
-      ; Sets the database file path
+      ; Set the database file path
       (if (getf options :db)
           (progn
             (defparameter argstr (format-args (opts:argv)))
