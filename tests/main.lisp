@@ -38,11 +38,11 @@
 
 ; Treeleaves Tests Suite
 (def-suite treeleaves
-  :description "Main Treeleaves Tests Suite")
+  :description "Main Treeleaves Test Suite")
 
 ; Treeleaves Models Suite
 (def-suite treeleaves.models
-  :description "Treeleaves.Models Tests Suite"
+  :description "Treeleaves.Models Test Suite"
   :in treeleaves)
 (in-suite treeleaves.models)
 
@@ -123,6 +123,12 @@
       (let ((result (parse-database-args "document -f ./documents.sqlite -qa :tags Books %")))
         (is (equal "./documents.sqlite" result)
         "parse-database-args should return the file path of the database from the arguments")))
+
+; Treeleaves CLI Suite
+(def-suite treeleaves.cli
+  :description "Treeleaves.CLI Test Suite"
+  :in treeleaves)
+(in-suite treeleaves.format)
 
 ;(test test-this-should-fail
       ;(let ((result nil))
