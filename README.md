@@ -7,14 +7,22 @@ of the file. Treeleaves is made with Common Lisp (SBCL).
 
 ## Why
 
-Tagging all your files for you automatically by directory allows you to easily
-search for them using any of these tags, and also preserve the structure of your
-current file directories. Don't feel like using Treeleaves to search for your files
-anymore? No problem, just delete the related `documents.sqlite` file, and you're done.
+Tagging files on your system automatically allows you to easily
+search for them using any of these tags while requiring little effort to tag them manually.
+You only have to sort files into their respective folders and allow treeleaves to take
+advantage of the hierarchical nature of the files. You can maintain your current directory
+structure while also having the ability to quickly locate files in nested directories.
+Don't feel like using Treeleaves to search for your files anymore? No problem,
+just delete the related `documents.sqlite` file, and that's it.
 
-In the future Treeleaves will automatically tag new files and insert entries into your
-document database. You'll be able to even specify other heuristics to tag files by,
-and even provide automatic migrations should you move the files somewhere else on disk.
+Treeleaves also offers additional features such as:
+
+- Automatic pruning of files not found on disk
+- Automatic migration of file paths for files moved on disk
+- Ability to specify specific files/directories to prune
+- Ability to output generated directory tags
+
+Other file searching/tagging heuristics are also planned for the future.
 
 ## Installation
 
