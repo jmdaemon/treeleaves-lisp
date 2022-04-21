@@ -1,7 +1,12 @@
 (defpackage treeleaves/tests/main
   (:use :cl
         :treeleaves
-        :fiveam))
+        :fiveam)
+  (:documentation "Unit tests for Treeleaves")
+  (:import-from #:treeleaves.models
+                #:*database-table-types*
+                )
+  )
 (in-package :treeleaves/tests/main)
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :treeleaves)' in your Lisp.
@@ -11,8 +16,8 @@
     ;(ok (= 1 1))))
 
 ; Tests
-(require "fiveam")
 (require "treeleaves")
+(require "fiveam")
 ;(use-package :fiveam)
 
 ; Treeleaves Suite
@@ -31,11 +36,11 @@
   (let ((result (gethash "document" *database-table-types*)))
     ;; Tip: put the expected value as the first argument of = or equal, string= etc.
     ;; FiveAM generates a more readable report following this convention.
-    (is (equal 'document result) "*database-table-types* contains document class"))
+    (is (equal 'document result) "*database-table-types* should contain the document class"))
   )
 
 ; Run test suite manually
-;(run! 'treeleaves)
+(run! 'treeleaves)
 
 ; treeleaves.model
 ; find-docs

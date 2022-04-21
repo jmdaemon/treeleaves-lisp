@@ -30,5 +30,4 @@
                 :components
                 ((:file "main"))))
   :description "Test system for treeleaves"
-  ;:perform (asdf:test-op (op c) (symbol-call :rove :run c)))
-  :perform (asdf:test-op (op c) (symbol-call :fiveam :run! (find-symbol* :treeleaves :treeleaves/test))))
+  :perform (asdf:test-op (op c) (symbol-call :fiveam :run! (find-symbol* "treeleaves" "treeleaves/tests"))))
