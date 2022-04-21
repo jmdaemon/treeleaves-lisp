@@ -52,9 +52,8 @@
       (let ((result (gethash "document" *database-table-types*)))
         (is (not (null result))
             "result should not be null")
-        ;(is (type-equal 'document result)
-            ;"*database-table-types* should contain the document class: ~a" result)))
-            ))
+        (is (type-equal 'document result)
+            "*database-table-types* should contain the document class: ~a" result)))
 
 ; Treeleaves Format Suite
 (def-suite treeleaves.format
