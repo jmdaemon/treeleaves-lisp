@@ -9,6 +9,7 @@
   (:import-from #:treeleaves.format
                 #:split-dir
                 #:find-tables
+                #:parse-search-args
                 )
   (:import-from #:treeleaves.cli)
   (:import-from #:treeleaves)
@@ -97,6 +98,19 @@
               (find-tables "./bin/treeleaves -t document -f ./documents.sqlite -q \":tags\" \"Books\" %")))
         (is (equal "document " result))
         "find-tables should return the name of the database table: ~a" result))
+
+; parse-search-args
+(test parse-search-args
+      (let ((result (parse-search-args ":tags Books %")))
+        (is (list= (list ":tags" "Books %") result))
+        "parse-search-args should return the keyword and the search term from the arguments"
+        ))
+
+(test parse-search-args
+      (let ((result (parse-search-term "document -f ./documents.sqlite -qa :tags Books %")))
+        (is (list= (list ":tags" "Books %") result))
+        "parse-search-args should return the keyword and the search term from the arguments"
+        ))
 
 ;(test test-this-should-fail
       ;(let ((result nil))

@@ -50,15 +50,8 @@
 (defun find-tables (str)
   "Finds and returns all tables found in str"
   (ppcre:register-groups-bind (matches)
-                              ;("([\\w ]*)" str :sharedp t)
-                              ;("(-t) ([\\w ]*)" str :sharedp t)
-                              ;("(t [\\w ]*)" str :sharedp t)
                               ("-t ([\\w ]*)" str :sharedp t)
                               (remove nil matches)))
-
-;(find-tables "document -f ./documents.sqlite -q :tags Books %") 
-;(find-tables "-t document -f ./documents.sqlite -q :tags Books %") 
-;(find-tables "./bin/treeleaves -t document -f ./documents.sqlite -q \":tags\" \"Books\" %") 
 
 (defun parse-tables (args)
   "Returns a list of the database tables found in free-args"
@@ -90,8 +83,8 @@
                                 ("(:[\\w]*) ([\\w %]*)" str :sharedp t)
                                 (list *keyword* *search-term*))) 
 ; Test
-;(parse-search-term ":tags Books %")
-;(parse-search-term "document -f ./documents.sqlite -qa :tags Books %") 
+;(parse-search-args ":tags Books %")
+;(parse-search-args "document -f ./documents.sqlite -qa :tags Books %") 
 
 (defun parse-database-args (str)
   "Parses a string of command line arguments into
