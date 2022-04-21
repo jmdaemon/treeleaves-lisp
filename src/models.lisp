@@ -110,9 +110,6 @@ keys."))
 ; Add the document class 
 (setf (gethash "document" *database-table-types*) 'document)
 
-; Test the database lookup
-;(gethash "document" *database-table-types*)
-
 (defun add-to-db (db files)
   "Add new document entries to the database"
   (iter (for filepath in files)

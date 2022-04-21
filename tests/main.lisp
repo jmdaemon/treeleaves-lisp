@@ -32,10 +32,10 @@
 (in-suite treeleaves.models)
 
 ; Index into the database table types
-(test database-table-types-index-with-document
+
+; Test the database lookup
+(test lookup-database-table-types
   (let ((result (gethash "document" *database-table-types*)))
-    ;; Tip: put the expected value as the first argument of = or equal, string= etc.
-    ;; FiveAM generates a more readable report following this convention.
     (is (equal 'document result) "*database-table-types* should contain the document class"))
   )
 
