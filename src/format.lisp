@@ -21,8 +21,6 @@
 (defun split-dir (dir)
     "Splits a directory file path on '/' characters"
     (cl-utilities:split-sequence #\/ dir))
-; Test
-;(split-dir "/home/user/")
 
 (defun make-tag (filepath)
   "Returns a list of directory names

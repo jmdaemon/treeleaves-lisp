@@ -54,10 +54,30 @@
   :in treeleaves)
 (in-suite treeleaves.format)
 
+; split-dir
 (test test-split-dir
       (let ((result (split-dir "/home/user/")))
        (is (list= (list "" "home" "user" "") result)
            "split-dir should split the directory into a list: ~a" result)))
+
+; format-tags
+(test test-format-tags
+      (let ((result (format-tags (list "Books" "Historical" "Fiction"))))
+        (is (equal "Books Historical Fiction
+" result))
+        "format-tags should format tags into a string"))
+
+; fmt
+(test test-fmt
+      (let ((result (fmt "Hello")))
+        (is (equal "Hello" result))
+        "fmt should format text into a string"))
+
+; format-tags
+(test test-format-args
+      (let ((result (format-args (list "Books" "Historical" "Fiction"))))
+        (is (equal "Books Historical Fiction" result))
+        "format-args should format arguments into a string"))
 
 ; find-tables
 (test test-find-tables-nil
