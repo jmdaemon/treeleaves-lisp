@@ -16,6 +16,7 @@ build:
 		--eval "(load \"$(EXE).asd\")" \
 		--eval "(ql:quickload :$(EXE))" \
 		--eval "(asdf:make :$(EXE))" \
+		--eval "(asdf:test-system :$(EXE))" \
 		--eval "(quit)"
 
 install: build $(BUILD_EXEC)

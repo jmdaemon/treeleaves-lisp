@@ -24,10 +24,11 @@
 (asdf:defsystem "treeleaves/tests"
   :author "Joseph Diza <josephm.diza@gmail.com>"
   :license "AGPLv3"
-  :depends-on ("treeleaves"
-               "rove")
+  :depends-on (:treeleaves
+               :fiveam)
   :components ((asdf:module "tests"
                 :components
                 ((:file "main"))))
   :description "Test system for treeleaves"
-  :perform (asdf:test-op (op c) (symbol-call :rove :run c)))
+  ;:perform (asdf:test-op (op c) (symbol-call :rove :run c)))
+  :perform (asdf:test-op (op c) (symbol-call :fiveam :run! (find-symbol* :treeleaves :treeleaves/test))))
