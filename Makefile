@@ -21,3 +21,6 @@ build:
 
 install: build $(BUILD_EXEC)
 	install $(BUILD_EXEC) $(DESTDIR)$(PREFIX)/bin/$(EXE)
+
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(EXE)
